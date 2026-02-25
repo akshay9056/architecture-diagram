@@ -6,7 +6,7 @@
 <title>Azure AKS Architecture Diagram</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  
+
   body {
     background: linear-gradient(135deg, #0a0e1a 0%, #0d1b2e 50%, #0a1628 100%);
     min-height: 100vh;
@@ -23,20 +23,8 @@
     backdrop-filter: blur(10px);
   }
 
-  header h1 {
-    font-size: 1.6rem;
-    font-weight: 300;
-    letter-spacing: 2px;
-    color: #60b4ff;
-    text-transform: uppercase;
-  }
-
-  header p {
-    font-size: 0.8rem;
-    color: #5a7a99;
-    margin-top: 4px;
-    letter-spacing: 1px;
-  }
+  header h1 { font-size: 1.6rem; font-weight: 300; letter-spacing: 2px; color: #60b4ff; text-transform: uppercase; }
+  header p { font-size: 0.8rem; color: #5a7a99; margin-top: 4px; letter-spacing: 1px; }
 
   .flow-buttons {
     display: flex;
@@ -73,22 +61,11 @@
   }
 
   .flow-btn:hover::before { opacity: 1; }
-  .flow-btn:hover {
-    border-color: #0078d4;
-    box-shadow: 0 0 15px rgba(0,120,212,0.4);
-    transform: translateY(-1px);
-  }
-
-  .flow-btn.active {
-    background: rgba(0,120,212,0.3);
-    border-color: #60b4ff;
-    box-shadow: 0 0 20px rgba(0,120,212,0.5);
-    color: #fff;
-  }
-
+  .flow-btn:hover { border-color: #0078d4; box-shadow: 0 0 15px rgba(0,120,212,0.4); transform: translateY(-1px); }
+  .flow-btn.active { background: rgba(0,120,212,0.3); border-color: #60b4ff; box-shadow: 0 0 20px rgba(0,120,212,0.5); color: #fff; }
   .flow-btn.auth-btn.active { border-color: #a3e635; box-shadow: 0 0 20px rgba(163,230,53,0.4); color: #a3e635; }
   .flow-btn.meta-btn.active { border-color: #fb923c; box-shadow: 0 0 20px rgba(251,146,60,0.4); color: #fb923c; }
-  .flow-btn.rec-btn.active { border-color: #c084fc; box-shadow: 0 0 20px rgba(192,132,252,0.4); color: #c084fc; }
+  .flow-btn.rec-btn.active  { border-color: #c084fc; box-shadow: 0 0 20px rgba(192,132,252,0.4); color: #c084fc; }
 
   .reset-btn {
     padding: 8px 20px;
@@ -98,36 +75,40 @@
     border-radius: 20px;
     cursor: pointer;
     font-size: 0.78rem;
-    letter-spacing: 0.5px;
     transition: all 0.3s ease;
   }
-
   .reset-btn:hover { border-color: #888; color: #ccc; }
 
+  /* Legend */
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    justify-content: center;
+    padding: 8px 20px;
+    background: rgba(0,0,0,0.15);
+    border-bottom: 1px solid rgba(0,120,212,0.1);
+    font-size: 0.68rem;
+    color: #4a6a88;
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 7px; }
+  .legend-line { width: 28px; height: 2px; background: rgba(0,120,212,0.5); }
+  .legend-line.dotted { background: none; border-top: 2px dashed rgba(192,132,252,0.6); }
+  .legend-svc-fe { width: 20px; height: 14px; border-radius: 3px; border: 2px solid rgba(251,146,60,0.65); background: rgba(251,146,60,0.08); flex-shrink:0; }
+  .legend-svc-be { width: 20px; height: 14px; border-radius: 3px; border: 2px dashed rgba(163,230,53,0.65); background: rgba(163,230,53,0.08); flex-shrink:0; }
+
   .diagram-wrapper {
-    padding: 30px 20px;
-    min-height: calc(100vh - 180px);
+    padding: 30px 20px 90px;
+    min-height: calc(100vh - 220px);
     display: flex;
     justify-content: center;
     align-items: flex-start;
   }
 
-  .diagram-canvas {
-    position: relative;
-    width: 1100px;
-    max-width: 100%;
-  }
+  .diagram-canvas { position: relative; width: 1200px; max-width: 100%; }
 
-  /* Rows */
-  .row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 0;
-  }
-
-  /* Node base */
+  /* Base node */
   .node {
     position: relative;
     border-radius: 12px;
@@ -142,93 +123,56 @@
     user-select: none;
     z-index: 10;
   }
-
-  .node:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0,120,212,0.35), 0 0 0 1px rgba(0,120,212,0.5);
-    border-color: rgba(0,120,212,0.7);
-    z-index: 20;
-  }
-
-  .node.highlighted {
-    box-shadow: 0 0 0 2px currentColor, 0 0 30px currentColor;
-    transform: translateY(-3px) scale(1.03);
-    z-index: 25;
-  }
-
+  .node:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,120,212,0.35), 0 0 0 1px rgba(0,120,212,0.5); border-color: rgba(0,120,212,0.7); z-index: 20; }
+  .node.highlighted { box-shadow: 0 0 0 2px currentColor, 0 0 30px currentColor; transform: translateY(-3px) scale(1.03); z-index: 25; }
   .node.dimmed { opacity: 0.3; }
+  .node .icon { font-size: 1.8rem; display: block; margin-bottom: 6px; line-height: 1; }
+  .node .label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: #90b4d0; white-space: nowrap; }
+  .node .sublabel { font-size: 0.62rem; color: #4a6a88; margin-top: 2px; }
 
-  .node .icon {
-    font-size: 1.8rem;
-    display: block;
-    margin-bottom: 6px;
-    line-height: 1;
+  /* Node colour themes */
+  .node-user   { border-color: rgba(96,180,255,0.4); }  .node-user .icon   { color: #60b4ff; }
+  .node-pip    { border-color: rgba(250,204,21,0.4); background: rgba(10,8,0,0.85); } .node-pip .icon { color: #facc15; }
+  .node-lb     { border-color: rgba(0,120,212,0.5);  background: rgba(0,30,60,0.9); }  .node-lb .icon  { color: #0078d4; }
+  .node-ingress{ border-color: rgba(20,184,166,0.4); }  .node-ingress .icon{ color: #14b8a6; }
+  .node-frontend{ border-color: rgba(251,146,60,0.4); } .node-frontend .icon{ color: #fb923c; }
+  .node-backend { border-color: rgba(163,230,53,0.4); } .node-backend .icon { color: #a3e635; }
+  .node-aad    { border-color: rgba(192,132,252,0.4); } .node-aad .icon    { color: #c084fc; }
+  .node-db     { border-color: rgba(251,146,60,0.4);  } .node-db .icon     { color: #fb923c; }
+  .node-blob   { border-color: rgba(52,211,153,0.4);  } .node-blob .icon   { color: #34d399; }
+
+  /* frontend-service — solid orange border (mirrors frontend pod) */
+  .node-svc-fe {
+    border: 2px solid rgba(251,146,60,0.6);
+    background: rgba(251,146,60,0.06);
   }
+  .node-svc-fe .icon  { color: #fb923c; }
+  .node-svc-fe .label { color: #f59a5a; }
 
-  .node .label {
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: #90b4d0;
-    white-space: nowrap;
+  /* backend-service — dashed green border (mirrors backend pod) */
+  .node-svc-be {
+    border: 2px dashed rgba(163,230,53,0.6);
+    background: rgba(163,230,53,0.06);
   }
+  .node-svc-be .icon  { color: #a3e635; }
+  .node-svc-be .label { color: #8ecf2a; }
 
-  .node .sublabel {
-    font-size: 0.62rem;
-    color: #4a6a88;
-    margin-top: 2px;
-  }
-
-  /* Node types */
-  .node-user { border-color: rgba(96,180,255,0.4); }
-  .node-user .icon { color: #60b4ff; }
-
-  .node-lb { border-color: rgba(0,120,212,0.5); background: rgba(0,30,60,0.9); }
-  .node-lb .icon { color: #0078d4; }
-
-  .node-ingress { border-color: rgba(20,184,166,0.4); }
-  .node-ingress .icon { color: #14b8a6; }
-
-  .node-frontend { border-color: rgba(251,146,60,0.4); }
-  .node-frontend .icon { color: #fb923c; }
-
-  .node-backend { border-color: rgba(163,230,53,0.4); }
-  .node-backend .icon { color: #a3e635; }
-
-  .node-k8s-svc { border-color: rgba(96,165,250,0.4); }
-  .node-k8s-svc .icon { color: #60a5fa; }
-
-  .node-aad { border-color: rgba(192,132,252,0.4); }
-  .node-aad .icon { color: #c084fc; }
-
-  .node-db { border-color: rgba(251,146,60,0.4); }
-  .node-db .icon { color: #fb923c; }
-
-  .node-blob { border-color: rgba(52,211,153,0.4); }
-  .node-blob .icon { color: #34d399; }
-
-  /* AKS Container */
+  /* AKS outer wrapper */
   .aks-container {
     border: 2px dashed rgba(0,120,212,0.4);
     border-radius: 20px;
-    padding: 20px;
+    padding: 22px 20px 20px;
     background: rgba(0,40,80,0.15);
     position: relative;
     margin: 0 20px;
     backdrop-filter: blur(4px);
     transition: all 0.3s ease;
   }
-
-  .aks-container:hover {
-    border-color: rgba(0,120,212,0.6);
-    background: rgba(0,40,80,0.2);
-  }
+  .aks-container:hover { border-color: rgba(0,120,212,0.6); background: rgba(0,40,80,0.2); }
 
   .aks-label {
     position: absolute;
-    top: -13px;
-    left: 20px;
+    top: -13px; left: 20px;
     background: linear-gradient(135deg, #003060, #001830);
     border: 1px solid rgba(0,120,212,0.5);
     border-radius: 8px;
@@ -240,9 +184,40 @@
     font-weight: 600;
   }
 
-  .aks-label span { margin-right: 6px; }
+  /* Namespace sub-boxes inside AKS */
+  .ns-container {
+    border-radius: 14px;
+    padding: 14px 14px 14px;
+    position: relative;
+    transition: border-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .ns-frontend {
+    border: 1px dashed rgba(251,146,60,0.38);
+    background: rgba(251,146,60,0.035);
+  }
+  .ns-backend {
+    border: 1px dashed rgba(163,230,53,0.38);
+    background: rgba(163,230,53,0.03);
+  }
+  .ns-label {
+    position: absolute;
+    top: -10px; left: 12px;
+    padding: 1px 9px;
+    border-radius: 5px;
+    font-size: 0.6rem;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .ns-frontend .ns-label { background: rgba(251,146,60,0.15); color: rgba(251,146,60,0.9); border: 1px solid rgba(251,146,60,0.3); }
+  .ns-backend  .ns-label { background: rgba(163,230,53,0.10); color: rgba(163,230,53,0.9); border: 1px solid rgba(163,230,53,0.3); }
 
-  /* External services container */
+  /* External service wrappers */
   .ext-container {
     border: 1px dashed rgba(100,100,130,0.3);
     border-radius: 16px;
@@ -250,11 +225,9 @@
     background: rgba(10,10,20,0.3);
     position: relative;
   }
-
   .ext-label {
     position: absolute;
-    top: -11px;
-    left: 16px;
+    top: -11px; left: 16px;
     background: #0a0e1a;
     padding: 2px 10px;
     font-size: 0.62rem;
@@ -266,118 +239,45 @@
   /* SVG arrows */
   .arrows-svg {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     pointer-events: none;
     z-index: 5;
     overflow: visible;
   }
-
   .arrow-path {
     fill: none;
     stroke-width: 1.5;
     stroke: rgba(0,120,212,0.35);
-    stroke-dasharray: none;
     transition: stroke 0.3s, stroke-width 0.3s, opacity 0.3s;
     marker-end: url(#arrowDefault);
   }
-
+  .arrow-path.dotted {
+    stroke-dasharray: 4 4;
+    stroke: rgba(192,132,252,0.38);
+    marker-end: url(#arrowDotted);
+  }
   .arrow-path.dimmed { opacity: 0.1; }
+  .arrow-path.flow-auth { stroke: rgba(163,230,53,0.85); marker-end: url(#arrowAuth); stroke-width: 2; }
+  .arrow-path.flow-meta { stroke: rgba(251,146,60,0.85); marker-end: url(#arrowMeta); stroke-width: 2; }
+  .arrow-path.flow-rec  { stroke: rgba(192,132,252,0.85); marker-end: url(#arrowRec);  stroke-width: 2; }
 
-  .arrow-path.flow-auth { stroke: rgba(163,230,53,0.8); marker-end: url(#arrowAuth); stroke-width: 2; }
-  .arrow-path.flow-meta { stroke: rgba(251,146,60,0.8); marker-end: url(#arrowMeta); stroke-width: 2; }
-  .arrow-path.flow-rec { stroke: rgba(192,132,252,0.8); marker-end: url(#arrowRec); stroke-width: 2; }
+  @keyframes dashFlow { to { stroke-dashoffset: -20; } }
+  .arrow-path.animated { stroke-dasharray: 6 4; animation: dashFlow 0.6s linear infinite; }
 
-  .step-badge {
-    font-size: 10px;
-    font-weight: 700;
-    fill: white;
-    dominant-baseline: middle;
-    text-anchor: middle;
-  }
+  /* Layout */
+  .main-layout { display: flex; flex-direction: column; gap: 0; align-items: center; }
+  .top-row { display: flex; align-items: center; justify-content: center; gap: 30px; padding: 10px 0; z-index: 10; position: relative; }
+  .middle-section { display: flex; align-items: stretch; justify-content: center; gap: 30px; width: 100%; position: relative; z-index: 10; }
+  .aks-inner { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+  .aks-namespaces-row { display: flex; align-items: flex-start; gap: 18px; }
+  .ext-services { display: flex; flex-direction: column; gap: 12px; justify-content: center; min-width: 155px; }
 
-  .badge-circle {
-    r: 9;
-    stroke-width: 1.5;
-  }
-
-  /* Animated flow dash */
-  @keyframes dashFlow {
-    to { stroke-dashoffset: -20; }
-  }
-
-  .arrow-path.animated {
-    stroke-dasharray: 6 4;
-    animation: dashFlow 0.6s linear infinite;
-  }
-
-  /* Layout helpers */
-  .main-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    align-items: center;
-  }
-
-  .top-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    padding: 10px 0;
-    z-index: 10;
-    position: relative;
-  }
-
-  .middle-section {
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
-    gap: 30px;
-    width: 100%;
-    position: relative;
-    z-index: 10;
-  }
-
-  .aks-inner {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    align-items: center;
-  }
-
-  .aks-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .ext-services {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    justify-content: center;
-    min-width: 140px;
-  }
-
-  .spacer-v { height: 40px; width: 2px; }
-  .connector-v {
-    width: 2px;
-    background: linear-gradient(to bottom, rgba(0,120,212,0.5), rgba(0,120,212,0.1));
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Side Panel */
+  /* Side panel */
   .side-panel {
     position: fixed;
-    right: -380px;
-    top: 0;
-    width: 360px;
-    height: 100vh;
+    right: -400px; top: 0;
+    width: 380px; height: 100vh;
     background: linear-gradient(180deg, #080e1c 0%, #0c1526 100%);
     border-left: 1px solid rgba(0,120,212,0.3);
     z-index: 1000;
@@ -385,56 +285,33 @@
     overflow-y: auto;
     box-shadow: -10px 0 40px rgba(0,0,0,0.5);
   }
-
   .side-panel.open { right: 0; }
 
   .panel-header {
     padding: 20px;
     border-bottom: 1px solid rgba(0,120,212,0.2);
     background: rgba(0,120,212,0.08);
-    position: sticky;
-    top: 0;
+    position: sticky; top: 0;
     backdrop-filter: blur(10px);
     z-index: 1;
   }
-
-  .panel-icon { font-size: 2rem; margin-bottom: 6px; display: block; }
-
-  .panel-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #60b4ff;
-    letter-spacing: 0.5px;
-  }
-
-  .panel-subtitle {
-    font-size: 0.7rem;
-    color: #4a6a88;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
+  .panel-icon  { font-size: 2rem; margin-bottom: 6px; display: block; }
+  .panel-title { font-size: 1rem; font-weight: 600; color: #60b4ff; letter-spacing: 0.5px; }
+  .panel-subtitle { font-size: 0.7rem; color: #4a6a88; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
 
   .panel-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
+    position: absolute; top: 16px; right: 16px;
     background: rgba(0,120,212,0.15);
     border: 1px solid rgba(0,120,212,0.3);
     color: #60b4ff;
     border-radius: 50%;
-    width: 28px;
-    height: 28px;
+    width: 28px; height: 28px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-size: 1rem;
     transition: all 0.2s;
   }
-
   .panel-close:hover { background: rgba(0,120,212,0.3); }
-
   .panel-body { padding: 20px; }
 
   .info-card {
@@ -444,21 +321,8 @@
     padding: 14px;
     margin-bottom: 12px;
   }
-
-  .info-card-label {
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #4a6a88;
-    margin-bottom: 6px;
-    font-weight: 600;
-  }
-
-  .info-card-value {
-    font-size: 0.82rem;
-    color: #c0d8f0;
-    line-height: 1.5;
-  }
+  .info-card-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: #4a6a88; margin-bottom: 6px; font-weight: 600; }
+  .info-card-value { font-size: 0.82rem; color: #c0d8f0; line-height: 1.6; }
 
   .tag {
     display: inline-block;
@@ -472,81 +336,54 @@
     letter-spacing: 0.3px;
   }
 
-  /* Flow step log */
+  /* Flow log */
   .flow-log {
     position: fixed;
-    bottom: 20px;
-    left: 50%;
+    bottom: 20px; left: 50%;
     transform: translateX(-50%);
-    background: rgba(8,14,28,0.95);
+    background: rgba(8,14,28,0.97);
     border: 1px solid rgba(0,120,212,0.3);
     border-radius: 12px;
-    padding: 12px 20px;
-    font-size: 0.75rem;
+    padding: 14px 24px;
+    font-size: 0.78rem;
     color: #90b4d0;
     z-index: 999;
-    max-width: 600px;
-    width: 90%;
+    max-width: 700px; width: 92%;
     text-align: center;
     backdrop-filter: blur(10px);
     display: none;
     box-shadow: 0 4px 30px rgba(0,0,0,0.5);
-    transition: opacity 0.3s;
   }
-
   .flow-log.visible { display: block; }
+  .flow-log-step { font-weight: 700; color: #60b4ff; font-size: 0.72rem; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 5px; }
+  .flow-log-desc { color: #d0e4f8; line-height: 1.55; }
 
-  .flow-log-step {
-    font-weight: 600;
-    color: #60b4ff;
-    font-size: 0.7rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .flow-log-desc { color: #c0d8f0; }
-
-  /* Overlay */
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 999;
-    display: none;
-    backdrop-filter: blur(2px);
-  }
-
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; display: none; backdrop-filter: blur(2px); }
   .overlay.show { display: block; }
 
-  /* HTTPS badge */
   .https-badge {
-    background: rgba(52,211,153,0.1);
-    border: 1px solid rgba(52,211,153,0.3);
-    border-radius: 4px;
-    padding: 1px 6px;
-    font-size: 0.58rem;
-    color: #34d399;
-    letter-spacing: 0.5px;
-    margin-top: 4px;
-    display: inline-block;
+    background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3);
+    border-radius: 4px; padding: 1px 6px; font-size: 0.58rem; color: #34d399;
+    letter-spacing: 0.5px; margin-top: 4px; display: inline-block;
+  }
+  .pip-badge {
+    background: rgba(250,204,21,0.1); border: 1px solid rgba(250,204,21,0.3);
+    border-radius: 4px; padding: 1px 6px; font-size: 0.58rem; color: #facc15;
+    letter-spacing: 0.5px; margin-top: 4px; display: inline-block;
+  }
+  .route-label {
+    font-size: 0.58rem; color: #4a8aaa;
+    background: rgba(0,0,0,0.35); border: 1px solid rgba(96,165,250,0.2);
+    border-radius: 4px; padding: 1px 6px; margin-top: 3px; display: inline-block;
   }
 
-  /* Pulse animation for active nodes */
   @keyframes nodePulse {
     0%, 100% { box-shadow: 0 0 0 2px currentColor, 0 0 20px currentColor; }
-    50% { box-shadow: 0 0 0 4px currentColor, 0 0 40px currentColor; }
+    50%       { box-shadow: 0 0 0 4px currentColor, 0 0 40px currentColor; }
   }
-
   .node.pulsing { animation: nodePulse 1.2s ease-in-out infinite; }
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    .side-panel { width: 100%; right: -100%; }
-    .diagram-canvas { width: 100%; overflow-x: auto; }
-  }
-
-  /* Scrollbar */
+  @media (max-width: 768px) { .side-panel { width: 100%; right: -100%; } .diagram-canvas { width: 100%; overflow-x: auto; } }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
   ::-webkit-scrollbar-thumb { background: rgba(0,120,212,0.4); border-radius: 3px; }
@@ -556,167 +393,192 @@
 
 <header>
   <h1>⚡ Azure AKS System Architecture</h1>
-  <p>Interactive Architecture Diagram · All Communication via HTTPS</p>
+  <p>Interactive Architecture Diagram · All Communication Encrypted via HTTPS · Click any component to learn more</p>
 </header>
 
+<div class="legend">
+  <div class="legend-item"><div class="legend-line"></div><span>Standard secure connection</span></div>
+  <div class="legend-item"><div class="legend-line dotted"></div><span>Token verification (Spring Boot checks with Azure AD)</span></div>
+  <div class="legend-item"><div class="legend-svc-fe"></div><span>Frontend router (solid orange border)</span></div>
+  <div class="legend-item"><div class="legend-svc-be"></div><span>Backend router (dashed green border)</span></div>
+</div>
+
 <div class="flow-buttons">
-  <button class="flow-btn auth-btn" onclick="runFlow('auth')">🔐 Authentication Flow</button>
-  <button class="flow-btn meta-btn" onclick="runFlow('meta')">📊 Metadata Flow</button>
-  <button class="flow-btn rec-btn" onclick="runFlow('rec')">🎬 Recording Flow</button>
+  <button class="flow-btn auth-btn" onclick="runFlow('auth')">🔐 Login Flow</button>
+  <button class="flow-btn meta-btn" onclick="runFlow('meta')">📊 Load Data Flow</button>
+  <button class="flow-btn rec-btn" onclick="runFlow('rec')">🎬 Play Recording Flow</button>
   <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
 </div>
 
 <div class="diagram-wrapper">
   <div class="diagram-canvas" id="canvas">
 
-    <!-- SVG Arrows Layer -->
     <svg class="arrows-svg" id="arrowsSvg">
       <defs>
-        <marker id="arrowDefault" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0 0, 8 3, 0 6" fill="rgba(0,120,212,0.5)"/>
-        </marker>
-        <marker id="arrowAuth" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0 0, 8 3, 0 6" fill="rgba(163,230,53,0.9)"/>
-        </marker>
-        <marker id="arrowMeta" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0 0, 8 3, 0 6" fill="rgba(251,146,60,0.9)"/>
-        </marker>
-        <marker id="arrowRec" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0 0, 8 3, 0 6" fill="rgba(192,132,252,0.9)"/>
-        </marker>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
+        <marker id="arrowDefault" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="rgba(0,120,212,0.5)"/></marker>
+        <marker id="arrowDotted"  markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="rgba(192,132,252,0.5)"/></marker>
+        <marker id="arrowAuth"    markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="rgba(163,230,53,0.9)"/></marker>
+        <marker id="arrowMeta"    markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="rgba(251,146,60,0.9)"/></marker>
+        <marker id="arrowRec"     markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="rgba(192,132,252,0.9)"/></marker>
       </defs>
     </svg>
 
     <div class="main-layout">
 
-      <!-- ROW 1: User -->
+      <!-- User -->
       <div class="top-row">
-        <div class="node node-user" id="node-user" onclick="showPanel('user')" title="Browser Client">
+        <div class="node node-user" id="node-user" onclick="showPanel('user')">
           <span class="icon">👤</span>
           <div class="label">User</div>
-          <div class="sublabel">Browser Client</div>
+          <div class="sublabel">Web Browser</div>
           <div class="https-badge">HTTPS</div>
         </div>
       </div>
 
-      <!-- Connector -->
-      <div style="height:30px;display:flex;align-items:center;justify-content:center;">
-        <div id="conn-user-lb" style="width:2px;height:30px;background:linear-gradient(to bottom,rgba(0,120,212,0.5),rgba(0,120,212,0.2));"></div>
+      <div style="height:18px;display:flex;align-items:center;justify-content:center;">
+        <div style="width:2px;height:18px;background:linear-gradient(to bottom,rgba(250,204,21,0.5),rgba(250,204,21,0.2));"></div>
       </div>
 
-      <!-- ROW 2: Load Balancer -->
+      <!-- Public IP -->
       <div class="top-row">
-        <div class="node node-lb" id="node-lb" onclick="showPanel('lb')" title="Azure Load Balancer">
-          <span class="icon">⚖️</span>
-          <div class="label">Azure Load Balancer</div>
-          <div class="sublabel">Traffic Distribution</div>
-          <div class="https-badge">L4 / L7</div>
+        <div class="node node-pip" id="node-pip" onclick="showPanel('pip')">
+          <span class="icon">🌍</span>
+          <div class="label">Public IP</div>
+          <div class="sublabel">Azure Static IP</div>
+          <div class="pip-badge">IPv4 / IPv6</div>
         </div>
       </div>
 
-      <!-- Connector -->
-      <div style="height:30px;display:flex;align-items:center;justify-content:center;">
-        <div id="conn-lb-aks" style="width:2px;height:30px;background:linear-gradient(to bottom,rgba(0,120,212,0.4),rgba(0,120,212,0.1));"></div>
+      <div style="height:18px;display:flex;align-items:center;justify-content:center;">
+        <div style="width:2px;height:18px;background:linear-gradient(to bottom,rgba(0,120,212,0.5),rgba(0,120,212,0.2));"></div>
       </div>
 
-      <!-- ROW 3: AKS + External -->
+      <!-- Load Balancer -->
+      <div class="top-row">
+        <div class="node node-lb" id="node-lb" onclick="showPanel('lb')">
+          <span class="icon">⚖️</span>
+          <div class="label">Azure Load Balancer</div>
+          <div class="sublabel">Traffic Distributor</div>
+          <div class="https-badge">L4 (TCP/UDP)</div>
+        </div>
+      </div>
+
+      <div style="height:18px;display:flex;align-items:center;justify-content:center;">
+        <div style="width:2px;height:18px;background:linear-gradient(to bottom,rgba(0,120,212,0.4),rgba(0,120,212,0.1));"></div>
+      </div>
+
+      <!-- Middle row: Azure AD | AKS | DB+Blob -->
       <div class="middle-section">
 
-        <!-- Left External: Azure AD -->
-        <div class="ext-services" style="min-width:140px;">
-          <div style="position:relative;margin-bottom:8px;">
-            <div class="ext-container" style="border-color:rgba(192,132,252,0.25);">
-              <div class="ext-label">External</div>
-              <div class="node node-aad" id="node-aad" onclick="showPanel('aad')" style="min-width:110px;">
-                <span class="icon">🔑</span>
-                <div class="label">Azure AD</div>
-                <div class="sublabel">OpenID Connect</div>
-                <div class="https-badge">OIDC / JWT</div>
-              </div>
+        <!-- LEFT: Azure AD -->
+        <div class="ext-services" style="min-width:155px;">
+          <div class="ext-container" style="border-color:rgba(192,132,252,0.28);">
+            <div class="ext-label">External · Identity</div>
+            <div class="node node-aad" id="node-aad" onclick="showPanel('aad')" style="min-width:128px;">
+              <span class="icon">🔑</span>
+              <div class="label">Azure AD</div>
+              <div class="sublabel">Login Provider</div>
+              <div class="https-badge">OIDC / JWT</div>
             </div>
           </div>
         </div>
 
         <!-- AKS Cluster -->
         <div class="aks-container" id="aks-container">
-          <div class="aks-label"><span>☸</span> AKS Cluster</div>
+          <div class="aks-label"><span>☸</span> AKS Cluster · Kubernetes</div>
           <div class="aks-inner">
 
             <!-- Ingress Controller -->
-            <div class="node node-ingress" id="node-ingress" onclick="showPanel('ingress')" style="min-width:200px;">
+            <div class="node node-ingress" id="node-ingress" onclick="showPanel('ingress')" style="min-width:300px;">
               <span class="icon">🌐</span>
               <div class="label">Ingress Controller</div>
-              <div class="sublabel">NGINX / Azure App GW</div>
-              <div class="https-badge">TLS Termination</div>
+              <div class="sublabel">NGINX · Smart Traffic Router (L7) · TLS</div>
+              <div class="https-badge">/ → Website &nbsp;·&nbsp; /api → App Server</div>
             </div>
 
-            <!-- Inner row: Frontend + K8s Service + Backend -->
-            <div class="aks-row">
-              <div class="node node-frontend" id="node-frontend" onclick="showPanel('frontend')">
-                <span class="icon">🅰️</span>
-                <div class="label">Angular Frontend</div>
-                <div class="sublabel">Pod · Nx/Angular 17</div>
+            <!-- Two namespace containers side by side -->
+            <div class="aks-namespaces-row">
+
+              <!-- FRONTEND namespace -->
+              <div class="ns-container ns-frontend" style="min-width:150px;">
+                <div class="ns-label">namespace: frontend</div>
+
+                <!-- frontend-service — solid orange border -->
+                <div class="node node-svc-fe" id="node-frontend-svc" onclick="showPanel('frontendsvc')" style="min-width:132px;">
+                  <span class="icon">🔄</span>
+                  <div class="label">frontend-service</div>
+                  <div class="sublabel">Internal Router</div>
+                  <div class="route-label">route: /</div>
+                </div>
+
+                <!-- Angular Pod -->
+                <div class="node node-frontend" id="node-frontend" onclick="showPanel('frontend')" style="min-width:132px;">
+                  <span class="icon">🅰️</span>
+                  <div class="label">Angular Frontend</div>
+                  <div class="sublabel">Pod · Angular 17</div>
+                </div>
               </div>
 
-              <div class="node node-k8s-svc" id="node-k8ssvc" onclick="showPanel('k8ssvc')" style="min-width:110px;">
-                <span class="icon">🔄</span>
-                <div class="label">K8s Service</div>
-                <div class="sublabel">ClusterIP</div>
+              <!-- BACKEND namespace -->
+              <div class="ns-container ns-backend" style="min-width:150px;">
+                <div class="ns-label">namespace: backend</div>
+
+                <!-- backend-service — dashed green border -->
+                <div class="node node-svc-be" id="node-backend-svc" onclick="showPanel('backendsvc')" style="min-width:132px;">
+                  <span class="icon">🔄</span>
+                  <div class="label">backend-service</div>
+                  <div class="sublabel">Internal Router</div>
+                  <div class="route-label">route: /api</div>
+                </div>
+
+                <!-- Spring Boot Pod -->
+                <div class="node node-backend" id="node-backend" onclick="showPanel('backend')" style="min-width:132px;">
+                  <span class="icon">🍃</span>
+                  <div class="label">Spring Boot API</div>
+                  <div class="sublabel">Pod · Java 21</div>
+                </div>
               </div>
 
-              <div class="node node-backend" id="node-backend" onclick="showPanel('backend')">
-                <span class="icon">🍃</span>
-                <div class="label">Spring Boot</div>
-                <div class="sublabel">Pod · Java 21</div>
-              </div>
-            </div>
-
+            </div><!-- end namespaces row -->
           </div>
-        </div>
+        </div><!-- end AKS -->
 
-        <!-- Right External: DB + Blob -->
-        <div class="ext-services" style="min-width:140px;">
+        <!-- RIGHT: Database + Blob Storage -->
+        <div class="ext-services" style="min-width:155px;">
           <div class="ext-container" style="border-color:rgba(251,146,60,0.2);">
-            <div class="ext-label">External</div>
+            <div class="ext-label">External · Storage</div>
             <div style="display:flex;flex-direction:column;gap:12px;">
-              <div class="node node-db" id="node-db" onclick="showPanel('db')" style="min-width:120px;">
+              <div class="node node-db" id="node-db" onclick="showPanel('db')" style="min-width:132px;">
                 <span class="icon">🐘</span>
                 <div class="label">Azure PostgreSQL</div>
-                <div class="sublabel">Metadata Store</div>
+                <div class="sublabel">Records Database</div>
                 <div class="https-badge">SSL/TLS</div>
               </div>
-              <div class="node node-blob" id="node-blob" onclick="showPanel('blob')" style="min-width:120px;">
+              <div class="node node-blob" id="node-blob" onclick="showPanel('blob')" style="min-width:132px;">
                 <span class="icon">📦</span>
-                <div class="label">Azure Blob</div>
-                <div class="sublabel">Recordings Store</div>
+                <div class="label">Azure Blob Storage</div>
+                <div class="sublabel">Video File Store</div>
                 <div class="https-badge">HTTPS</div>
               </div>
             </div>
           </div>
         </div>
 
-      </div>
-    </div>
-
-  </div>
+      </div><!-- end middle-section -->
+    </div><!-- end main-layout -->
+  </div><!-- end canvas -->
 </div>
 
 <!-- Flow Log -->
 <div class="flow-log" id="flowLog">
-  <div class="flow-log-step" id="flowLogStep">STEP 1/6</div>
+  <div class="flow-log-step" id="flowLogStep">STEP 1</div>
   <div class="flow-log-desc" id="flowLogDesc">Loading...</div>
 </div>
 
-<!-- Overlay -->
 <div class="overlay" id="overlay" onclick="closePanel()"></div>
 
-<!-- Side Panel -->
 <div class="side-panel" id="sidePanel">
-  <div class="panel-header" id="panelHeader">
+  <div class="panel-header">
     <span class="panel-icon" id="panelIcon">⚡</span>
     <div class="panel-title" id="panelTitle">Component</div>
     <div class="panel-subtitle" id="panelSubtitle">Architecture Node</div>
@@ -726,128 +588,135 @@
 </div>
 
 <script>
-// Component data
+// ─── Component data — plain English for managers & non-tech clients ───
 const components = {
   user: {
     icon: '👤',
-    title: 'User (Browser Client)',
-    subtitle: 'End User Interface',
-    purpose: 'The end user accessing the application through a modern web browser. Initiates authentication, requests metadata, and streams recordings.',
-    tech: ['Chrome/Firefox/Edge', 'HTTPS/TLS 1.3', 'JWT Token Storage', 'Angular SPA'],
-    security: 'Tokens stored in memory (not localStorage). All outbound requests use Authorization header with Bearer JWT. Enforces HTTPS.',
-    data: 'User credentials (auth only), JWT Access Token, UI state, received metadata JSON, streamed recording data.'
+    title: 'User — the Person Using the App',
+    subtitle: 'Anyone with a browser and internet access',
+    purpose: 'This represents a real person — a client, staff member, or admin — who opens the application in their web browser. Everything they see and do starts here. They don\'t need to install anything; the app runs entirely in the browser.',
+    tech: ['Web Browser (Chrome, Firefox, Edge, Safari)', 'Encrypted HTTPS connection at all times', 'Single-page web app (loads once, works like a desktop app)'],
+    security: 'All data sent between the user\'s browser and our servers is fully encrypted — nobody can intercept or read it. Users must log in with their company credentials before they can access anything.',
+    data: 'Login credentials (only at login time), the pages they browse, recordings they play, and any search or filter they perform.'
+  },
+  pip: {
+    icon: '🌍',
+    title: 'Public IP — Our Internet "Street Address"',
+    subtitle: 'The fixed point where users find us on the internet',
+    purpose: 'Think of this like a postal address. When a user types our website URL into their browser, the internet routes them to this fixed IP address. It\'s the single, public front door of our entire system. Everything flows through here first.',
+    tech: ['Azure Static Public IP address', 'Microsoft DDoS Protection built-in', 'Our domain name (URL) is mapped here via DNS'],
+    security: 'Microsoft\'s automatic DDoS protection blocks flood and bot attacks before they even reach our servers. Only web traffic on port 443 (secure HTTPS) is accepted — all other ports are closed.',
+    data: 'No actual user data is read or processed here. It simply receives the connection and passes it on — like a receptionist directing visitors to the right floor.'
   },
   lb: {
     icon: '⚖️',
-    title: 'Azure Load Balancer',
-    subtitle: 'Traffic Distribution Layer',
-    purpose: 'Distributes incoming HTTPS traffic across AKS cluster nodes. Provides high availability, health checks, and horizontal scaling.',
-    tech: ['Azure Load Balancer SKU Standard', 'L4/L7 routing', 'Health Probes', 'SSL Passthrough'],
-    security: 'DDoS Protection Standard, Network Security Groups (NSGs), only whitelisted ports 443/80 open. No business logic.',
-    data: 'Raw HTTPS packets — no data inspection. IP addresses for routing decisions.'
+    title: 'Load Balancer — the Traffic Director',
+    subtitle: 'Spreads incoming users evenly across our servers',
+    purpose: 'Imagine a supermarket with multiple checkout lanes. The Load Balancer makes sure all lanes stay equally busy — no single server gets overwhelmed while others sit idle. If one server becomes unavailable, it automatically stops sending traffic there and redirects users to healthy servers, with no downtime.',
+    tech: ['Azure Load Balancer (Standard tier)', 'Layer 4 routing — works at the network level, not HTTP', 'Automatic health checks every few seconds'],
+    security: 'Accepts only encrypted traffic. Does not inspect or modify the content of any messages — it only decides which server to route each connection to. Fully managed by Microsoft Azure.',
+    data: 'Only sees connection-level information (source IP, destination port). Never reads the actual content of messages or user data.'
   },
   ingress: {
     icon: '🌐',
-    title: 'Ingress Controller',
-    subtitle: 'AKS Internal Gateway',
-    purpose: 'Handles TLS termination, path-based routing, and distributes traffic to appropriate pods inside the AKS cluster.',
-    tech: ['NGINX Ingress Controller', 'Azure Application Gateway', 'TLS/SSL Termination', 'cert-manager (Let\'s Encrypt)'],
-    security: 'TLS 1.2+ enforced. Rate limiting headers. CORS policy enforcement. Redirects HTTP → HTTPS.',
-    data: 'Decrypted HTTP requests internally. Routes based on URL path: /api/* → Backend, /* → Frontend.'
+    title: 'Ingress Controller — the Smart Gatekeeper',
+    subtitle: 'Routes each request to the right part of the system inside the cluster',
+    purpose: 'Once traffic enters our Kubernetes cluster, the Ingress Controller acts like a smart post office sorter. It reads the URL of each request and decides where it goes: requests for the website homepage go to the Angular app, and requests for data or recordings go to the backend API server. It also handles the HTTPS encryption, so everything passing through is secure.',
+    tech: ['NGINX Ingress Controller (industry standard)', 'Handles HTTPS padlock (TLS termination)', 'URL-based routing: / → website, /api → app server', 'Automatic redirect of any unencrypted HTTP to HTTPS'],
+    security: 'Handles all encryption/decryption at the boundary. Enforces rate limits to block excessive requests. Any accidental unencrypted traffic is automatically redirected to the secure channel.',
+    data: 'Reads only the URL path of each incoming request to make routing decisions. Does not read login tokens or personal data.'
+  },
+  frontendsvc: {
+    icon: '🔄',
+    title: 'Frontend Router (frontend-service)',
+    subtitle: 'Internal guide for website traffic · Namespace: frontend',
+    purpose: 'Inside Kubernetes, every component has an internal "address" so parts of the system can find each other without going over the internet. This is the internal router specifically for the website (Angular app). When the Ingress Controller decides a request is for the website, it hands it to this router, which forwards it to a running copy of the website — load-balancing across however many copies are running.',
+    tech: ['Kubernetes ClusterIP Service', 'Internal private DNS: frontend-service.frontend.svc.cluster.local', 'Automatically distributes load across all frontend pod copies'],
+    security: 'Completely invisible to the outside world — it exists only inside our private cluster network. No external traffic can reach it directly. Only the Ingress Controller is allowed to send requests here.',
+    data: 'Website pages, images, and JavaScript files. No personal data or login tokens pass through this router.'
+  },
+  backendsvc: {
+    icon: '🔄',
+    title: 'Backend Router (backend-service)',
+    subtitle: 'Internal guide for data and API traffic · Namespace: backend',
+    purpose: 'This is the internal router for our application server (Spring Boot API). When the Ingress Controller decides a request is for data or recordings (/api), it hands it to this router. It also allows the Angular website to communicate with the backend server directly inside the cluster — without going over the internet — which is faster and more secure.',
+    tech: ['Kubernetes ClusterIP Service', 'Internal private DNS: backend-service.backend.svc.cluster.local', 'Automatically load-balances across all backend pod copies'],
+    security: 'Private and invisible externally. Network policies inside Kubernetes mean only the Ingress Controller and the Angular frontend pods are allowed to send requests to it.',
+    data: 'API requests containing user tokens, search queries, and responses containing recording lists, metadata, and streamed video data.'
   },
   frontend: {
     icon: '🅰️',
-    title: 'Angular Frontend Pod',
-    subtitle: 'SPA · Kubernetes Pod',
-    purpose: 'Serves the single-page Angular application. Handles UI logic, MSAL authentication flow, token management, and API calls to backend.',
-    tech: ['Angular 17', 'MSAL Angular (Microsoft)', 'RxJS', 'Node.js 20 (serve)', 'Nx Monorepo'],
-    security: 'Uses MSAL for secure OIDC flow. JWT stored in memory only. Attaches Authorization header to all API calls. No sensitive data cached.',
-    data: 'Rendered HTML/CSS/JS bundle. JWT token (in-memory). API responses. Streamed recordings (Blob URLs).'
+    title: 'Angular Frontend — the Website Users See',
+    subtitle: 'The visual interface that runs in the browser · Namespace: frontend',
+    purpose: 'This is what the user actually sees and interacts with in their browser. It displays the application pages, shows the recording list, plays recordings, and handles the login process. It runs in a container inside our cloud environment and can scale to serve many users at once. Multiple copies can run simultaneously to handle peak load.',
+    tech: ['Angular 17 (Google\'s web framework)', 'MSAL — Microsoft\'s own secure login library', 'Nx Monorepo project structure', 'Served via containerised Node.js'],
+    security: 'Login tokens are kept in the page\'s temporary memory only — never saved to disk, browser storage, or cookies — so they vanish the moment the tab is closed. Every single request to the backend includes a proof-of-identity token that the server checks.',
+    data: 'The web pages, styles, and scripts the browser downloads. Also manages the user\'s login token in temporary memory.'
   },
   backend: {
     icon: '🍃',
-    title: 'Spring Boot Backend Pod',
-    subtitle: 'API Server · Kubernetes Pod',
-    purpose: 'Core business logic. Validates JWT tokens, orchestrates metadata queries, fetches and streams recordings from Blob Storage.',
-    tech: ['Spring Boot 3', 'Java 21', 'Spring Security OAuth2 Resource Server', 'Spring Data JPA', 'Azure SDK for Java'],
-    security: 'JWT validation: signature (RS256), issuer, audience, scope. Returns 401 on invalid tokens. No credentials in code — uses Managed Identity.',
-    data: 'Validated JWT claims, metadata records (PostgreSQL), recording binary streams (Blob), 401/403 error responses.'
-  },
-  k8ssvc: {
-    icon: '🔄',
-    title: 'Kubernetes Service (ClusterIP)',
-    subtitle: 'Internal Service Mesh',
-    purpose: 'Provides stable internal DNS names and load balancing between Frontend and Backend pods. Enables decoupled pod-to-pod communication.',
-    tech: ['Kubernetes ClusterIP Service', 'kube-proxy', 'CoreDNS', 'iptables routing'],
-    security: 'Internal only — not exposed externally. Network Policies restrict pod-to-pod communication. Only authorized pods can communicate.',
-    data: 'Internal HTTP requests between Frontend and Backend pods. No external data exposure.'
+    title: 'Spring Boot API — the Brain of the Application',
+    subtitle: 'Processes all requests and business logic · Namespace: backend',
+    purpose: 'This is the engine that does all the real work behind the scenes. When a user asks to see a list of recordings, or clicks play on one, this server processes the request. It checks that the user is properly logged in, verifies their permissions, fetches the right data from the database, and streams video files from storage. All sensitive operations happen here — the user\'s browser only ever sees the final result.',
+    tech: ['Spring Boot 3 (Java 21)', 'Spring Security — verifies every request automatically', 'Azure SDK — secure connection to database and storage', 'Managed Identity — passwordless server authentication (no passwords stored in code)'],
+    security: 'Every single request is verified before anything happens: who is the user, is their session still valid, and are they allowed to access what they\'re asking for? Uses Azure Managed Identity — our servers never store database passwords or storage keys in code. If a token is invalid, the server immediately returns an "Access Denied" response.',
+    data: 'Receives user tokens and API requests. Queries the database for records. Streams video files from blob storage. Returns JSON data or video streams. Returns error messages when access is denied.'
   },
   aad: {
     icon: '🔑',
-    title: 'Azure Active Directory',
-    subtitle: 'Identity Provider · External',
-    purpose: 'Authenticates users via OpenID Connect protocol. Issues signed JWT access tokens containing user claims, roles, and permissions.',
-    tech: ['Azure AD / Microsoft Entra ID', 'OpenID Connect 1.0', 'OAuth 2.0', 'RS256 JWT Signing', 'JWKS endpoint'],
-    security: 'Microsoft-managed identity platform. MFA supported. App Registration controls audience/scope. Token expiry enforced. Refresh token rotation.',
-    data: 'User identity claims (sub, email, name), group memberships, JWT access & refresh tokens, ID tokens.'
+    title: 'Azure Active Directory — the Login & Identity System',
+    subtitle: 'Microsoft\'s enterprise identity platform (the same system used by Microsoft 365)',
+    purpose: 'This is where users log in. Azure AD is Microsoft\'s enterprise identity system — used by millions of companies worldwide, including most Fortune 500 organisations. When a user enters their credentials, Azure AD checks them and issues a digitally signed "security pass" (called a token). This token proves who the user is for the rest of their session. Our backend server also contacts Azure AD to confirm each token is genuine before processing any request.',
+    tech: ['Microsoft Azure AD / Entra ID', 'OpenID Connect login standard', 'Signed JWT tokens — unforgeable digital identity passes', 'Multi-Factor Authentication (MFA) support', 'JWKS endpoint — public keys used by our server to verify tokens'],
+    security: 'Industry-standard enterprise login security. Supports MFA (two-factor authentication). Tokens are cryptographically signed — they cannot be forged or tampered with. Each token has a short expiry time, after which the user must re-authenticate.',
+    data: 'User identity (name, email, department, role/group), digitally signed login tokens, and the public keys that our backend server uses to verify those tokens.'
   },
   db: {
     icon: '🐘',
-    title: 'Azure Database for PostgreSQL',
-    subtitle: 'Metadata Store · External',
-    purpose: 'Stores and manages application metadata — recording indexes, user preferences, session data, and application configuration.',
-    tech: ['Azure Database for PostgreSQL Flexible Server', 'PostgreSQL 15', 'Spring Data JPA / Hibernate', 'Connection Pooling (HikariCP)'],
-    security: 'SSL/TLS enforced on all connections. Private endpoint (VNet injection). Managed Identity auth — no passwords in code. Firewall rules restrict access to AKS subnet only.',
-    data: 'Recording metadata (title, duration, format), user records, session data, application configuration.'
+    title: 'Azure PostgreSQL — the Records Database',
+    subtitle: 'Stores all structured application data',
+    purpose: 'This is our database — where all structured information lives. Think of it like a very powerful, organised digital filing cabinet. It stores details about every recording (title, duration, upload date, who uploaded it, format), user settings, session data, and application configuration. Our backend server can read and write to it almost instantly, and it\'s fully managed by Microsoft Azure.',
+    tech: ['Azure Database for PostgreSQL Flexible Server', 'PostgreSQL 15 database engine', 'All connections encrypted (SSL/TLS)', 'Managed Identity — no passwords stored in code'],
+    security: 'Not reachable from the internet at all — only accessible from within our private Azure network. All database connections are encrypted. Access uses Azure Managed Identity, so there are no database passwords stored anywhere in the codebase.',
+    data: 'Recording titles, durations, file references, upload dates, who uploaded each recording, user preferences, and application configuration settings.'
   },
   blob: {
     icon: '📦',
-    title: 'Azure Blob Storage',
-    subtitle: 'Recordings Store · External',
-    purpose: 'Stores large binary recording files. Backend fetches and streams recordings directly to Angular frontend without full download.',
-    tech: ['Azure Blob Storage (Hot/Cool tier)', 'Azure SDK (BlobServiceClient)', 'Streaming API', 'SAS Tokens (optional)'],
-    security: 'Private containers — no public access. Managed Identity authentication. Storage Firewall limits access to AKS subnet. HTTPS-only flag enforced.',
-    data: 'Binary recording files (MP4, WebM, etc.), thumbnails, recording metadata blobs.'
+    title: 'Azure Blob Storage — the Video File Warehouse',
+    subtitle: 'Stores all recording video files',
+    purpose: 'This is where the actual video files live. Azure Blob Storage is Microsoft\'s cloud file storage — designed for large binary files like videos, images, and documents. When a user clicks "play," our backend server securely retrieves the file from here and streams it in chunks to the user\'s browser, just like a private streaming service. Files can be on "hot" (frequently accessed) or "cool" (rarely accessed) tiers to optimise cost.',
+    tech: ['Azure Blob Storage (Hot / Cool tier)', 'Chunked video streaming', 'Managed Identity — no storage keys stored in code', 'Azure SDK for Java'],
+    security: 'All containers are private — no file can be accessed directly from the internet. Only our backend server (using Managed Identity) can retrieve files. All transfers are encrypted. There are no public URLs or direct links to files.',
+    data: 'Video recording files (MP4, WebM, etc.), thumbnails, and any associated media assets.'
   }
 };
 
 function showPanel(id) {
   const comp = components[id];
   if (!comp) return;
-
   document.getElementById('panelIcon').textContent = comp.icon;
   document.getElementById('panelTitle').textContent = comp.title;
   document.getElementById('panelSubtitle').textContent = comp.subtitle;
-
-  const body = document.getElementById('panelBody');
-  body.innerHTML = `
+  document.getElementById('panelBody').innerHTML = `
     <div class="info-card">
-      <div class="info-card-label">📋 Purpose</div>
+      <div class="info-card-label">💡 What does this do?</div>
       <div class="info-card-value">${comp.purpose}</div>
     </div>
     <div class="info-card">
-      <div class="info-card-label">⚙️ Technology Stack</div>
+      <div class="info-card-label">🛠️ Technology Used</div>
       <div class="info-card-value">${comp.tech.map(t => `<span class="tag">${t}</span>`).join('')}</div>
     </div>
     <div class="info-card">
-      <div class="info-card-label">🔒 Security Responsibility</div>
+      <div class="info-card-label">🔒 How is it secured?</div>
       <div class="info-card-value">${comp.security}</div>
     </div>
     <div class="info-card">
-      <div class="info-card-label">📦 Data Handled</div>
+      <div class="info-card-label">📦 What information flows through it?</div>
       <div class="info-card-value">${comp.data}</div>
     </div>
   `;
-
   document.getElementById('sidePanel').classList.add('open');
   document.getElementById('overlay').classList.add('show');
-
-  // Highlight node
-  document.querySelectorAll('.node').forEach(n => n.style.outline = '');
-  const nodeEl = document.getElementById('node-' + id) || document.getElementById('node-' + id.replace('node-',''));
-  if (nodeEl) {
-    nodeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
 }
 
 function closePanel() {
@@ -855,60 +724,106 @@ function closePanel() {
   document.getElementById('overlay').classList.remove('show');
 }
 
-// Flow definitions
+// ─── Flow Definitions — plain English, suitable for non-technical viewers ───
 const flows = {
   auth: {
     color: 'rgba(163,230,53,0.9)',
     btnClass: 'auth-btn',
     steps: [
-      { nodes: ['node-user', 'node-lb', 'node-ingress', 'node-frontend'], label: 'STEP 1/6 · User Opens App', desc: 'User opens browser → Load Balancer → Ingress Controller → Angular Frontend Pod serves SPA' },
-      { nodes: ['node-frontend', 'node-aad'], label: 'STEP 2/6 · Redirect to Azure AD', desc: 'Angular detects unauthenticated user → MSAL redirects to Azure AD OpenID Connect endpoint' },
-      { nodes: ['node-aad'], label: 'STEP 3/6 · User Authenticates', desc: 'User enters credentials in Azure AD login portal. MFA challenge if configured.' },
-      { nodes: ['node-aad', 'node-frontend'], label: 'STEP 4/6 · JWT Token Returned', desc: 'Azure AD issues signed JWT Access Token (RS256) + ID Token → redirects back to Angular app' },
-      { nodes: ['node-frontend'], label: 'STEP 5/6 · Token Stored Securely', desc: 'Angular/MSAL stores JWT in memory (not localStorage). Token ready for API calls.' },
-      { nodes: ['node-frontend', 'node-k8ssvc', 'node-backend'], label: 'STEP 6/6 · API Calls with JWT', desc: 'Angular sends requests with Authorization: Bearer <JWT> header to Spring Boot via K8s Service' }
+      {
+        nodes: ['node-user','node-pip','node-lb','node-ingress','node-frontend-svc','node-frontend'],
+        label: 'STEP 1 of 6 — User Opens the App in Their Browser',
+        desc: 'The user types the website URL and hits Enter. Their request travels through our public IP address, gets distributed evenly by the Load Balancer, and the Ingress Controller delivers it to the website. The Angular app loads in the user\'s browser within seconds.'
+      },
+      {
+        nodes: ['node-frontend','node-aad'],
+        label: 'STEP 2 of 6 — The App Detects the User Isn\'t Logged In',
+        desc: 'The Angular app checks whether the user has a valid login session. Since they don\'t yet, it automatically redirects them to Microsoft\'s Azure AD login page — exactly like clicking "Sign in with Microsoft."'
+      },
+      {
+        nodes: ['node-aad'],
+        label: 'STEP 3 of 6 — The User Enters Their Credentials',
+        desc: 'The user enters their company email and password on the familiar Microsoft login page. If the organisation has enabled Multi-Factor Authentication (MFA), they also approve a prompt on their phone or authenticator app.'
+      },
+      {
+        nodes: ['node-aad','node-frontend'],
+        label: 'STEP 4 of 6 — Microsoft Issues a Secure Digital Pass',
+        desc: 'Once Microsoft confirms the user\'s identity, it generates a digitally signed security token — think of it as a tamper-proof digital ID card. This token is sent back to the user\'s browser, and the user is redirected back to our application.'
+      },
+      {
+        nodes: ['node-frontend'],
+        label: 'STEP 5 of 6 — The Token is Stored Safely in Memory',
+        desc: 'The application stores this token in the page\'s temporary memory — not saved to disk, browser storage, or cookies. This means it\'s automatically and permanently deleted the moment the browser tab is closed. The user is now fully logged in.'
+      },
+      {
+        nodes: ['node-frontend','node-backend-svc','node-backend'],
+        label: 'STEP 6 of 6 — Every API Request Carries the Token as Proof of Identity',
+        desc: 'From this point on, every time the app asks the server for data (like loading a recording list), it silently attaches the token as proof of who the user is. The backend checks the token is genuine before responding with any data.'
+      }
     ]
   },
   meta: {
     color: 'rgba(251,146,60,0.9)',
     btnClass: 'meta-btn',
     steps: [
-      { nodes: ['node-frontend'], label: 'STEP 1/4 · Request Metadata', desc: 'Angular component requests metadata from backend API (e.g. GET /api/recordings)' },
-      { nodes: ['node-backend'], label: 'STEP 2/4 · JWT Validation', desc: 'Spring Boot validates JWT: signature (RS256), issuer, audience, scope. Returns 401 if invalid.' },
-      { nodes: ['node-backend', 'node-db'], label: 'STEP 3/4 · Query PostgreSQL', desc: 'Backend queries Azure PostgreSQL via SSL connection using Managed Identity authentication' },
-      { nodes: ['node-db', 'node-backend', 'node-k8ssvc', 'node-frontend'], label: 'STEP 4/4 · Return Metadata JSON', desc: 'PostgreSQL returns records → Backend serializes to JSON → K8s Service → Angular renders data' }
+      {
+        nodes: ['node-frontend','node-backend-svc'],
+        label: 'STEP 1 of 4 — User Navigates to the Recordings List',
+        desc: 'The user opens the recordings page in the app. The Angular frontend sends a request to the backend API via the internal backend router, asking "show me the list of recordings this user is allowed to see."'
+      },
+      {
+        nodes: ['node-backend','node-aad'],
+        label: 'STEP 2 of 4 — Backend Confirms the User\'s Identity',
+        desc: 'Before fetching anything, the backend server checks the user\'s security token. It contacts Microsoft\'s Azure AD to verify the token is genuine, hasn\'t expired, and belongs to a user with the correct role and permissions. If any check fails, the request is rejected immediately.'
+      },
+      {
+        nodes: ['node-backend','node-db'],
+        label: 'STEP 3 of 4 — The App Fetches the Data from the Database',
+        desc: 'With the user\'s identity confirmed, the backend server queries our PostgreSQL database for the relevant recording records — titles, durations, upload dates, and other details — using a private, encrypted connection.'
+      },
+      {
+        nodes: ['node-db','node-backend','node-backend-svc','node-frontend'],
+        label: 'STEP 4 of 4 — The Data Appears on the User\'s Screen',
+        desc: 'The database sends the records back to the backend, which neatly packages them and sends them through the internal router to the Angular app. Within moments, the user sees the full list of recordings displayed on their screen.'
+      }
     ]
   },
   rec: {
     color: 'rgba(192,132,252,0.9)',
     btnClass: 'rec-btn',
     steps: [
-      { nodes: ['node-frontend'], label: 'STEP 1/4 · Request Recording', desc: 'User selects recording in Angular UI → GET /api/recordings/{id}/stream request sent' },
-      { nodes: ['node-backend'], label: 'STEP 2/4 · Authenticate & Authorize', desc: 'Spring Boot validates JWT, checks user permissions for requested recording resource' },
-      { nodes: ['node-backend', 'node-blob'], label: 'STEP 3/4 · Fetch from Blob Storage', desc: 'Backend uses Azure SDK with Managed Identity to stream recording from Azure Blob Storage' },
-      { nodes: ['node-blob', 'node-backend', 'node-k8ssvc', 'node-frontend', 'node-user'], label: 'STEP 4/4 · Stream to Frontend', desc: 'Backend pipes binary stream → K8s Service → Ingress → Angular receives chunked recording data' }
+      {
+        nodes: ['node-frontend','node-backend-svc'],
+        label: 'STEP 1 of 4 — User Clicks "Play" on a Recording',
+        desc: 'The user selects a recording and presses play. The Angular app sends a request to the backend server via the internal backend router, asking to stream that specific recording file.'
+      },
+      {
+        nodes: ['node-backend','node-aad'],
+        label: 'STEP 2 of 4 — The Server Checks: Is This User Allowed to Watch This?',
+        desc: 'The backend verifies the user\'s identity token and checks whether their account has permission to view this specific recording. If they\'re not authorised, the server returns a clear "Access Denied" message. No file data is ever sent until this check passes.'
+      },
+      {
+        nodes: ['node-backend','node-blob'],
+        label: 'STEP 3 of 4 — The Server Retrieves the Video File from Storage',
+        desc: 'With access confirmed, the backend server connects to Azure Blob Storage using a secure, passwordless connection. It starts retrieving the video file — not all at once, but in small chunks, so playback begins almost immediately.'
+      },
+      {
+        nodes: ['node-blob','node-backend','node-backend-svc','node-frontend','node-user'],
+        label: 'STEP 4 of 4 — The Video Streams to the User\'s Screen',
+        desc: 'Video chunks flow continuously: Blob Storage → backend server → internal backend router → through the cluster → all the way to the user\'s browser. The video plays smoothly and in real time, without needing the entire file to download first — just like a streaming service.'
+      }
     ]
   }
 };
 
-let currentFlow = null;
-let flowInterval = null;
-let currentStep = 0;
+let currentFlow = null, flowInterval = null, currentStep = 0;
 
 function resetAll() {
   if (flowInterval) { clearInterval(flowInterval); flowInterval = null; }
-  currentFlow = null;
-  currentStep = 0;
-
-  document.querySelectorAll('.node').forEach(n => {
-    n.classList.remove('highlighted','dimmed','pulsing');
-    n.style.color = '';
-  });
-
+  currentFlow = null; currentStep = 0;
+  document.querySelectorAll('.node').forEach(n => { n.classList.remove('highlighted','dimmed','pulsing'); n.style.color = ''; });
   document.querySelectorAll('.flow-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('flowLog').classList.remove('visible');
-
-  // Reset AKS container
   document.getElementById('aks-container').style.borderColor = '';
 }
 
@@ -916,156 +831,97 @@ function runFlow(type) {
   resetAll();
   const flow = flows[type];
   if (!flow) return;
-
-  currentFlow = type;
-  currentStep = 0;
-
+  currentFlow = type; currentStep = 0;
   document.querySelector('.' + flow.btnClass).classList.add('active');
   document.getElementById('flowLog').classList.add('visible');
 
   function applyStep(step) {
-    const stepData = flow.steps[step];
+    const s = flow.steps[step];
     document.querySelectorAll('.node').forEach(n => {
       n.classList.remove('highlighted','dimmed','pulsing');
-      if (stepData.nodes.includes(n.id)) {
+      if (s.nodes.includes(n.id)) {
         n.classList.add('highlighted','pulsing');
-        n.style.setProperty('--glow-color', flow.color);
-        n.style.color = flow.color.replace('rgba','rgb').replace(/,\s*[\d.]+\)/, ')');
+        n.style.color = flow.color.replace('rgba','rgb').replace(/,\s*[\d.]+\)/,')');
       } else {
         n.classList.add('dimmed');
       }
     });
-
-    document.getElementById('flowLogStep').textContent = stepData.label;
-    document.getElementById('flowLogDesc').textContent = stepData.desc;
-
-    // AKS highlight
-    const aksNodes = ['node-frontend','node-backend','node-ingress','node-k8ssvc'];
-    if (stepData.nodes.some(n => aksNodes.includes(n))) {
-      document.getElementById('aks-container').style.borderColor = flow.color;
-    } else {
-      document.getElementById('aks-container').style.borderColor = '';
-    }
+    document.getElementById('flowLogStep').textContent = s.label;
+    document.getElementById('flowLogDesc').textContent  = s.desc;
+    const aksNodes = ['node-frontend','node-backend','node-ingress','node-frontend-svc','node-backend-svc'];
+    document.getElementById('aks-container').style.borderColor = s.nodes.some(n => aksNodes.includes(n)) ? flow.color : '';
   }
 
   applyStep(0);
-
-  flowInterval = setInterval(() => {
-    currentStep++;
-    if (currentStep >= flow.steps.length) {
-      currentStep = 0;
-    }
-    applyStep(currentStep);
-  }, 2200);
+  flowInterval = setInterval(() => { currentStep = (currentStep + 1) % flow.steps.length; applyStep(currentStep); }, 6500);
 }
 
-// Draw static arrows using absolute position calculations
+// ─── Arrow Drawing ───
 function getCenter(el) {
-  const canvas = document.getElementById('canvas');
-  const canvasRect = canvas.getBoundingClientRect();
-  const rect = el.getBoundingClientRect();
-  return {
-    x: rect.left - canvasRect.left + rect.width / 2,
-    y: rect.top - canvasRect.top + rect.height / 2,
-    top: rect.top - canvasRect.top,
-    bottom: rect.top - canvasRect.top + rect.height,
-    left: rect.left - canvasRect.left,
-    right: rect.left - canvasRect.left + rect.width,
-    w: rect.width,
-    h: rect.height
-  };
+  const cr = document.getElementById('canvas').getBoundingClientRect();
+  const r  = el.getBoundingClientRect();
+  return { x: r.left-cr.left+r.width/2, y: r.top-cr.top+r.height/2,
+           top: r.top-cr.top, bottom: r.top-cr.top+r.height,
+           left: r.left-cr.left, right: r.left-cr.left+r.width };
 }
 
-function drawArrow(svg, x1, y1, x2, y2, id, curved) {
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+function drawArrow(svg, x1, y1, x2, y2, id, curved, cls) {
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   let d;
   if (curved) {
-    const mx = (x1 + x2) / 2;
-    const my = (y1 + y2) / 2;
-    const cx = mx + (y2 - y1) * 0.3;
-    const cy = my - (x2 - x1) * 0.3;
+    const mx=(x1+x2)/2, my=(y1+y2)/2, cx=mx+(y2-y1)*0.3, cy=my-(x2-x1)*0.3;
     d = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
   } else {
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const mx = x1 + dx * 0.5;
+    const mx = x1 + (x2-x1)*0.5;
     d = `M ${x1} ${y1} C ${mx} ${y1} ${mx} ${y2} ${x2} ${y2}`;
   }
-  path.setAttribute('d', d);
-  path.setAttribute('class', 'arrow-path');
-  path.setAttribute('id', id);
-  svg.appendChild(path);
-  return path;
+  p.setAttribute('d', d);
+  p.setAttribute('class', 'arrow-path' + (cls ? ' '+cls : ''));
+  p.setAttribute('id', id);
+  svg.appendChild(p);
 }
 
 function drawArrows() {
   const svg = document.getElementById('arrowsSvg');
-  // Clear existing paths (keep defs)
-  const existing = svg.querySelectorAll('.arrow-path, .badge-group');
-  existing.forEach(e => e.remove());
+  svg.querySelectorAll('.arrow-path').forEach(e => e.remove());
 
-  const ids = ['node-user','node-lb','node-ingress','node-frontend','node-backend','node-k8ssvc','node-aad','node-db','node-blob'];
-  const nodes = {};
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) nodes[id] = getCenter(el);
-  });
+  const ids = ['node-user','node-pip','node-lb','node-ingress',
+                'node-frontend','node-backend','node-frontend-svc','node-backend-svc',
+                'node-aad','node-db','node-blob'];
+  const n = {};
+  ids.forEach(id => { const el = document.getElementById(id); if (el) n[id] = getCenter(el); });
+  if (!n['node-user']) return;
 
-  if (!nodes['node-user']) return;
+  drawArrow(svg, n['node-user'].x,        n['node-user'].bottom,      n['node-pip'].x,           n['node-pip'].top,           'arr-user-pip', false);
+  drawArrow(svg, n['node-pip'].x,         n['node-pip'].bottom,       n['node-lb'].x,            n['node-lb'].top,            'arr-pip-lb',   false);
+  drawArrow(svg, n['node-lb'].x,          n['node-lb'].bottom,        n['node-ingress'].x,       n['node-ingress'].top,       'arr-lb-ing',   false);
 
-  // User → LB (vertical)
-  drawArrow(svg, nodes['node-user'].x, nodes['node-user'].bottom, nodes['node-lb'].x, nodes['node-lb'].top, 'arr-user-lb', false);
+  drawArrow(svg, n['node-ingress'].x-55,  n['node-ingress'].bottom,   n['node-frontend-svc'].x,  n['node-frontend-svc'].top,  'arr-ing-fesvc', false);
+  drawArrow(svg, n['node-ingress'].x+55,  n['node-ingress'].bottom,   n['node-backend-svc'].x,   n['node-backend-svc'].top,   'arr-ing-besvc', false);
 
-  // LB → Ingress (vertical)
-  drawArrow(svg, nodes['node-lb'].x, nodes['node-lb'].bottom, nodes['node-ingress'].x, nodes['node-ingress'].top, 'arr-lb-ingress', false);
+  drawArrow(svg, n['node-frontend-svc'].x, n['node-frontend-svc'].bottom, n['node-frontend'].x,  n['node-frontend'].top,      'arr-fesvc-fe', false);
+  drawArrow(svg, n['node-backend-svc'].x,  n['node-backend-svc'].bottom,  n['node-backend'].x,   n['node-backend'].top,       'arr-besvc-be', false);
 
-  // Ingress → Frontend
-  drawArrow(svg, nodes['node-ingress'].x, nodes['node-ingress'].bottom,
-    nodes['node-frontend'].x, nodes['node-frontend'].top, 'arr-ing-fe', false);
+  // Angular → Azure AD (login, solid)
+  drawArrow(svg, n['node-frontend'].left,    n['node-frontend'].y,     n['node-aad'].right, n['node-aad'].y,      'arr-fe-aad', true);
+  // Spring Boot → Azure AD (JWT verify, dotted)
+  drawArrow(svg, n['node-backend'].left - 8, n['node-backend'].y - 8, n['node-aad'].right, n['node-aad'].y + 14, 'arr-be-aad', true, 'dotted');
 
-  // Frontend ↔ K8s Service (horizontal)
-  drawArrow(svg, nodes['node-frontend'].right, nodes['node-frontend'].y,
-    nodes['node-k8ssvc'].left, nodes['node-k8ssvc'].y, 'arr-fe-svc', false);
-
-  // K8s Service ↔ Backend (horizontal)
-  drawArrow(svg, nodes['node-k8ssvc'].right, nodes['node-k8ssvc'].y,
-    nodes['node-backend'].left, nodes['node-backend'].y, 'arr-svc-be', false);
-
-  // Frontend → Azure AD (curve out left)
-  drawArrow(svg, nodes['node-frontend'].left, nodes['node-frontend'].y,
-    nodes['node-aad'].right, nodes['node-aad'].y, 'arr-fe-aad', true);
-
-  // Backend → PostgreSQL
-  drawArrow(svg, nodes['node-backend'].right, nodes['node-backend'].y,
-    nodes['node-db'].left, nodes['node-db'].y, 'arr-be-db', true);
-
-  // Backend → Blob
-  drawArrow(svg, nodes['node-backend'].right, nodes['node-backend'].y + 20,
-    nodes['node-blob'].left, nodes['node-blob'].y, 'arr-be-blob', true);
+  drawArrow(svg, n['node-backend'].right,  n['node-backend'].y,      n['node-db'].left,   n['node-db'].y,   'arr-be-db',   true);
+  drawArrow(svg, n['node-backend'].right,  n['node-backend'].y + 18, n['node-blob'].left, n['node-blob'].y, 'arr-be-blob', true);
 }
 
-// Wait for layout then draw
-window.addEventListener('load', () => {
-  setTimeout(drawArrows, 300);
-});
+window.addEventListener('load',   () => setTimeout(drawArrows, 350));
+window.addEventListener('resize', () => setTimeout(drawArrows, 120));
 
-window.addEventListener('resize', () => {
-  setTimeout(drawArrows, 100);
-});
-
-// Hover effects on nodes
 document.querySelectorAll('.node').forEach(node => {
   node.addEventListener('mouseenter', () => {
     if (currentFlow) return;
-    document.querySelectorAll('.node').forEach(n => {
-      if (n !== node) n.style.opacity = '0.6';
-    });
+    document.querySelectorAll('.node').forEach(n => { if (n !== node) n.style.opacity = '0.6'; });
   });
   node.addEventListener('mouseleave', () => {
     if (currentFlow) return;
-    document.querySelectorAll('.node').forEach(n => {
-      n.style.opacity = '';
-    });
+    document.querySelectorAll('.node').forEach(n => { n.style.opacity = ''; });
   });
 });
 </script>
